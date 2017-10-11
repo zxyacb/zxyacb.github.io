@@ -137,6 +137,143 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-201710/build_cef" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/201710/build_cef/">Build Cef</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/11/201710/build_cef/" class="archive-article-date">
+  	<time datetime="2017-10-11T15:47:05.134Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><ul>
+<li><a href="https://bitbucket.org/chromiumembedded/cef/wiki/MasterBuildQuickStart#markdown-header-windows-setup" target="_blank" rel="external">环境要求</a>：可能会更新</li>
+<li>必须使用VS2015 update 3，安装时勾选C++以及win 10 sdk 14393<a href="http://msdn.itellyou.cn" target="_blank" rel="external">msdn.itellyou.cn</a>上下载，建议安装英文版</li>
+<li>在下载chromium的源码时，如下载失败，可以使用<a href="https://laod.cn/hosts/2016-google-hosts.html" target="_blank" rel="external">google hosts</a>。但在下载chromium依赖包中的部分在google storage上的东西时，需要FaQ</li>
+<li>在控制面板 -&gt; 区域和语言 -&gt; 管理 -&gt; 更改系统区域设置 -&gt; 英语(美国)。这样可以避免编译时出现Unicode Error</li>
+<li>需要使用最多80G硬盘空间，建议8G以上空余内存（Release版至少7G，Debug版至少12G），以及较好的网速（需要下载8G左右源码+1G左右依赖包，暂无断线重连的方法）。<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
+<li><a href="https://storage.googleapis.com/chrome-infra/depot_tools.zip" target="_blank" rel="external">环境工具depot_tools.zip</a>：需要将目录加入到环境变量</li>
+<li><a href="https://bitbucket.org/chromiumembedded/cef/raw/master/tools/automate/automate-git.py" target="_blank" rel="external">脚本automate-git.py</a></li>
+<li>新建update.bat，内容如下，根据存放目录，适当修改下面python的前三个参数的路径。我的目录结构如下：<ul>
+<li>E:\code\<ul>
+<li>automate\<ul>
+<li>automate-git.py</li>
+</ul>
+</li>
+<li>chromium_git\<ul>
+<li>update.bat</li>
+</ul>
+</li>
+<li>depot_tools\<ul>
+<li>depot_tools.zip解压文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="update-bat"><a href="#update-bat" class="headerlink" title="update.bat"></a>update.bat</h2><p>在chromium_git目录下创建update.bat文件，复制以下内容，设定好以下参数使用cmd进入bat的目录，运行即可。<br>因为chromium的源码大概有8G左右，而且必须一次下载成功，因此分为下载和编译两部分<br>以下设置只是样例，目录需自行修改</p>
+<p>GN is not supported with branch 2743 and older (set CEF_USE_GN=0).</p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><pre><code>set CEF_USE_GN=0
+set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome
+set GYP_MSVS_VERSION=2015
+set CEF_ARCHIVE_FORMAT=tar.gz
+python ..\automate\automate-git.py --download-dir=e:\code\chromium_git --depot-tools-dir=e:\code\depot_tools --branch=2704 --no-build
+</code></pre><h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><pre><code>set CEF_USE_GN=0
+set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome
+set GYP_MSVS_VERSION=2015
+set CEF_ARCHIVE_FORMAT=tar.gz
+python ..\automate\automate-git.py --download-dir=e:\code\chromium_git --depot-tools-dir=e:\code\depot_tools --branch=2704 --no-debug-build --minimal-distrib --force-build --no-update
+
+rem ---分割线---以下为手动编译指令(不包含rem)
+rem checkout --force refs/tags/51.0.2704.103
+rem gclient sync --reset --with_branch_heads --jobs 16
+</code></pre><ul>
+<li>GYP_DEFINES，设置如下可添加chromium对mp3的支持<br>  <code>set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome</code></li>
+<li>python参数<br><code>--branch=XXXX 指定cef的branch，指定后，会默认下载该branch的cef，以及最新版本的chromium再自动切换到对应版本
+--checkout 手动指定cef的commit(可选参数)
+--chromium-checkout 手动指定chromium的版本(可选参数)
+--no-debug-build 不生成Debug版本，即不生成开发需要的libcef_dll_wrapper库(可选参数)
+--force-clean 强制清除所有chromium的生成项，将源码回档到未编译前，清除后需要重新下载(可选参数)
+--force-build 强制进行编译，重新开始或者继续之前的工作(可选参数)
+--no-update 不再更新cef和chromium(可选参数)</code><br>其余参数可到automate-git.py文件中查看。</li>
+</ul>
+<h3 id="python参数一般示例"><a href="#python参数一般示例" class="headerlink" title="python参数一般示例"></a>python参数一般示例</h3><blockquote>
+<p>开始下载<br><code>--branch=XXXX --no-build</code><br>下载中途出错，需要修正<br><code>--branch=XXXX --force-clean --no-build</code><br>下载完成，开始编译，指定不再检查更新<br><code>--branch=XXXX --no-update --force-build</code></p>
+</blockquote>
+<h1 id="可能出现的编译错误"><a href="#可能出现的编译错误" class="headerlink" title="可能出现的编译错误"></a>可能出现的编译错误</h1><p>如果不出现此类错误，就不要作此处理</p>
+<h2 id="1-Unicode-Error"><a href="#1-Unicode-Error" class="headerlink" title="(1) Unicode Error"></a>(1) Unicode Error</h2><p><code>warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss</code></p>
+<p>使用Notepad++将文件格式从<code>Unicode无Bom</code>转为<code>ANSI</code>，需要一一修改，比较麻烦。<br>或者<strong>按照前文注意事项3处理</strong></p>
+<h2 id="2-EGL"><a href="#2-EGL" class="headerlink" title="(2) EGL"></a>(2) EGL</h2><pre><code>src\third_party\swiftshader\include\egl\eglext.h(119): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(119): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(120): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(515): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(518): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(585): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(585): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(586): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(586): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(587): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(588): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(590): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(591): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+</code></pre><p>Just insert code <code>typedef EGLAttribKHR EGLAttrib;</code> into file “eglext.h” below line 62. <a href="http://www.magpcss.org/ceforum/viewtopic.php?f=6&amp;t=14473&amp;p=32202&amp;hilit=eglext#p32202" target="_blank" rel="external">原帖链接</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/11/201710/build_cef/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017 | Hexo</title>
+  <title>Build Cef | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2017/index.html">
+  <meta name="description" content="注意事项 环境要求：可能会更新 必须使用VS2015 update 3，安装时勾选C++以及win 10 sdk 14393msdn.itellyou.cn上下载，建议安装英文版 在下载chromium的源码时，如下载失败，可以使用google hosts。但在下载chromium依赖包中的部分在google storage上的东西时，需要FaQ 在控制面板 -&amp;gt; 区域和语言 -&amp;gt; 管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Build Cef">
+<meta property="og:url" content="http://yoursite.com/2017/10/11/201710/build_cef/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="注意事项 环境要求：可能会更新 必须使用VS2015 update 3，安装时勾选C++以及win 10 sdk 14393msdn.itellyou.cn上下载，建议安装英文版 在下载chromium的源码时，如下载失败，可以使用google hosts。但在下载chromium依赖包中的部分在google storage上的东西时，需要FaQ 在控制面板 -&amp;gt; 区域和语言 -&amp;gt; 管">
+<meta property="og:updated_time" content="2017-10-11T16:42:38.018Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Build Cef">
+<meta name="twitter:description" content="注意事项 环境要求：可能会更新 必须使用VS2015 update 3，安装时勾选C++以及win 10 sdk 14393msdn.itellyou.cn上下载，建议安装英文版 在下载chromium的源码时，如下载失败，可以使用google hosts。但在下载chromium依赖包中的部分在google storage上的东西时，需要FaQ 在控制面板 -&amp;gt; 区域和语言 -&amp;gt; 管">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -135,76 +139,225 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-201710/build_cef" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Build Cef
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/11/201710/build_cef/" class="archive-article-date">
+
+        
+        <a href="/2017/10/11/201710/build_cef/" class="archive-article-date">
   	<time datetime="2017-10-11T15:47:05.134Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/11/201710/build_cef/">Build Cef</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><ul>
+<li><a href="https://bitbucket.org/chromiumembedded/cef/wiki/MasterBuildQuickStart#markdown-header-windows-setup" target="_blank" rel="external">环境要求</a>：可能会更新</li>
+<li>必须使用VS2015 update 3，安装时勾选C++以及win 10 sdk 14393<a href="http://msdn.itellyou.cn" target="_blank" rel="external">msdn.itellyou.cn</a>上下载，建议安装英文版</li>
+<li>在下载chromium的源码时，如下载失败，可以使用<a href="https://laod.cn/hosts/2016-google-hosts.html" target="_blank" rel="external">google hosts</a>。但在下载chromium依赖包中的部分在google storage上的东西时，需要FaQ</li>
+<li>在控制面板 -&gt; 区域和语言 -&gt; 管理 -&gt; 更改系统区域设置 -&gt; 英语(美国)。这样可以避免编译时出现Unicode Error</li>
+<li>需要使用最多80G硬盘空间，建议8G以上空余内存（Release版至少7G，Debug版至少12G），以及较好的网速（需要下载8G左右源码+1G左右依赖包，暂无断线重连的方法）。<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
+<li><a href="https://storage.googleapis.com/chrome-infra/depot_tools.zip" target="_blank" rel="external">环境工具depot_tools.zip</a>：需要将目录加入到环境变量</li>
+<li><a href="https://bitbucket.org/chromiumembedded/cef/raw/master/tools/automate/automate-git.py" target="_blank" rel="external">脚本automate-git.py</a></li>
+<li>新建update.bat，内容如下，根据存放目录，适当修改下面python的前三个参数的路径。我的目录结构如下：<ul>
+<li>E:\code\<ul>
+<li>automate\<ul>
+<li>automate-git.py</li>
+</ul>
+</li>
+<li>chromium_git\<ul>
+<li>update.bat</li>
+</ul>
+</li>
+<li>depot_tools\<ul>
+<li>depot_tools.zip解压文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="update-bat"><a href="#update-bat" class="headerlink" title="update.bat"></a>update.bat</h2><p>在chromium_git目录下创建update.bat文件，复制以下内容，设定好以下参数使用cmd进入bat的目录，运行即可。<br>因为chromium的源码大概有8G左右，而且必须一次下载成功，因此分为下载和编译两部分<br>以下设置只是样例，目录需自行修改</p>
+<p>GN is not supported with branch 2743 and older (set CEF_USE_GN=0).</p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><pre><code>set CEF_USE_GN=0
+set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome
+set GYP_MSVS_VERSION=2015
+set CEF_ARCHIVE_FORMAT=tar.gz
+python ..\automate\automate-git.py --download-dir=e:\code\chromium_git --depot-tools-dir=e:\code\depot_tools --branch=2704 --no-build
+</code></pre><h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><pre><code>set CEF_USE_GN=0
+set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome
+set GYP_MSVS_VERSION=2015
+set CEF_ARCHIVE_FORMAT=tar.gz
+python ..\automate\automate-git.py --download-dir=e:\code\chromium_git --depot-tools-dir=e:\code\depot_tools --branch=2704 --no-debug-build --minimal-distrib --force-build --no-update
 
-        <div class="article-info info-on-right">
-          
-          
+rem ---分割线---以下为手动编译指令(不包含rem)
+rem checkout --force refs/tags/51.0.2704.103
+rem gclient sync --reset --with_branch_heads --jobs 16
+</code></pre><ul>
+<li>GYP_DEFINES，设置如下可添加chromium对mp3的支持<br>  <code>set GYP_DEFINES=branding=Chromium buildtype=Official proprietary_codecs=1 ffmpeg_branding=Chrome</code></li>
+<li>python参数<br><code>--branch=XXXX 指定cef的branch，指定后，会默认下载该branch的cef，以及最新版本的chromium再自动切换到对应版本
+--checkout 手动指定cef的commit(可选参数)
+--chromium-checkout 手动指定chromium的版本(可选参数)
+--no-debug-build 不生成Debug版本，即不生成开发需要的libcef_dll_wrapper库(可选参数)
+--force-clean 强制清除所有chromium的生成项，将源码回档到未编译前，清除后需要重新下载(可选参数)
+--force-build 强制进行编译，重新开始或者继续之前的工作(可选参数)
+--no-update 不再更新cef和chromium(可选参数)</code><br>其余参数可到automate-git.py文件中查看。</li>
+</ul>
+<h3 id="python参数一般示例"><a href="#python参数一般示例" class="headerlink" title="python参数一般示例"></a>python参数一般示例</h3><blockquote>
+<p>开始下载<br><code>--branch=XXXX --no-build</code><br>下载中途出错，需要修正<br><code>--branch=XXXX --force-clean --no-build</code><br>下载完成，开始编译，指定不再检查更新<br><code>--branch=XXXX --no-update --force-build</code></p>
+</blockquote>
+<h1 id="可能出现的编译错误"><a href="#可能出现的编译错误" class="headerlink" title="可能出现的编译错误"></a>可能出现的编译错误</h1><p>如果不出现此类错误，就不要作此处理</p>
+<h2 id="1-Unicode-Error"><a href="#1-Unicode-Error" class="headerlink" title="(1) Unicode Error"></a>(1) Unicode Error</h2><p><code>warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss</code></p>
+<p>使用Notepad++将文件格式从<code>Unicode无Bom</code>转为<code>ANSI</code>，需要一一修改，比较麻烦。<br>或者<strong>按照前文注意事项3处理</strong></p>
+<h2 id="2-EGL"><a href="#2-EGL" class="headerlink" title="(2) EGL"></a>(2) EGL</h2><pre><code>src\third_party\swiftshader\include\egl\eglext.h(119): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(119): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(120): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(515): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(518): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(585): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(585): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(586): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+src\third_party\swiftshader\include\egl\eglext.h(586): error C2143: syntax error: missing &apos;,&apos; before &apos;*&apos;
+src\third_party\swiftshader\include\egl\eglext.h(587): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(588): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(590): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+src\third_party\swiftshader\include\egl\eglext.h(591): error C2061: syntax error: identifier &apos;EGLAttrib&apos;
+</code></pre><p>Just insert code <code>typedef EGLAttribKHR EGLAttrib;</code> into file “eglext.h” below line 62. <a href="http://www.magpcss.org/ceforum/viewtopic.php?f=6&amp;t=14473&amp;p=32202&amp;hilit=eglext#p32202" target="_blank" rel="external">原帖链接</a></p>
 
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/10/11/201710/build_cef/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/08/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-07T16:30:11.704Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-08</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/08/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/08/hello-world/">Hello World</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+    <section id="comments">
+      <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'zxyacb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </section>
+  
+
+  
 
 
           </div>
@@ -227,8 +380,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
